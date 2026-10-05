@@ -5,14 +5,14 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/file
+  url: http://localhost:8080/file
   body: multipartForm
   auth: none
 }
 
 body:multipart-form {
-  file_path: uploads
-  file: @file(./fixtures/sample-upload.txt) @contentType(text/plain)
+  file_path: assets
+  file: @file(/Users/Macbook/Downloads/Screenshot_20260909_115711_Instagram.jpg) @contentType(image/jpeg)
 }
 
 tests {

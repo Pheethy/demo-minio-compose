@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"mime"
 	"path/filepath"
@@ -28,7 +29,7 @@ func (r *fileRepository) UploadFileMinio(ctx context.Context, filePath string, f
 	if contentType == "" {
 		contentType = "application/octet-stream" // ค่า default หากหา Content-Type ไม่ได้
 	}
-	info, err := r.minioClient.PutObject(ctx, r.cfg.MinIO().Bucket(), fileName, fileContent, fileSize, minio.PutObjectOptions{ContentType: contentType})
+	info, err := r.minioClient.PutObject(ctx, r.cfg.MinIO().Bucket(), fmt.Sprintf("%s/%s", filePath, fileName), fileContent, fileSize, minio.PutObjectOptions{ContentType: contentType})
 	if err != nil {
 		return nil, err
 	}
