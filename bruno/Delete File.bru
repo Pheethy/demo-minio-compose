@@ -1,0 +1,27 @@
+meta {
+  name: Delete File
+  type: http
+  seq: 3
+}
+
+delete {
+  url: http://localhost:8080/file?key=assets/Screenshot_20260909_115711_Instagram.jpg
+  body: none
+  auth: none
+}
+
+params:query {
+  key: assets/Screenshot_20260909_115711_Instagram.jpg
+}
+
+tests {
+  test("returns a successful delete response", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().message).to.equal("successful");
+  });
+}
+
+docs {
+  Deletes a file by query key from the configured MinIO bucket.
+  Start the API locally, select the local environment, then send this request.
+}

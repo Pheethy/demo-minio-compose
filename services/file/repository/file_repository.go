@@ -6,8 +6,10 @@ import (
 	"io"
 	"mime"
 	"path/filepath"
+	"time"
 
 	"github.com/Pheethy/demo-minio-compose/config"
+	"github.com/Pheethy/demo-minio-compose/models"
 	"github.com/Pheethy/demo-minio-compose/services/file"
 	"github.com/minio/minio-go/v7"
 )
@@ -35,4 +37,27 @@ func (r *fileRepository) UploadFileMinio(ctx context.Context, filePath string, f
 	}
 
 	return &info, nil
+}
+
+func (r *fileRepository) DownloadFileMinio(ctx context.Context, filePath string) (models.MinioObject, error) {
+	object, err := r.minioClient.GetObject(ctx, r.cfg.MinIO().Bucket(), filePath, minio.GetObjectOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	return object, nil
+}
+
+func (r *fileRepository) DeleteFileMinio(ctx context.Context, filePath string) error {
+	return r.minioClient.RemoveObject(ctx, r.cfg.MinIO().Bucket(), filePath, minio.RemoveObjectOptions{})
+}
+
+func (f *fileRepository) SignURLExpired(ctx context.Context, key string) (string, error) {
+	expired := time.Second * time.Duration(30)
+	presignedURL, err := f.minioClient.PresignedGetObject(ctx, f.cfg.MinIO().Bucket(), key, expired, nil)
+	if err != nil {
+		return "", err
+	}
+
+	return presignedURL.String(), nil
 }
