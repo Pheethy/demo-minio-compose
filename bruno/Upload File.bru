@@ -1,0 +1,29 @@
+meta {
+  name: Upload File
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/file
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  file_path: uploads
+  file: @file(./fixtures/sample-upload.txt) @contentType(text/plain)
+}
+
+tests {
+  test("returns a successful upload response", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().message).to.equal("successful");
+    expect(res.getBody()).to.have.property("upload_info");
+  });
+}
+
+docs {
+  Uploads fixtures/sample-upload.txt to the configured MinIO bucket.
+  Start the API locally, select the local environment, then send this request.
+}

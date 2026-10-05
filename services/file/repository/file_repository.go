@@ -13,10 +13,10 @@ import (
 
 type fileRepository struct {
 	minioClient *minio.Client
-	cfg         config.Config
+	cfg         config.IConfig
 }
 
-func NewFileRepository(minioClient *minio.Client, cfg config.Config) file.IFileRepository {
+func NewFileRepository(minioClient *minio.Client, cfg config.IConfig) file.IFileRepository {
 	return &fileRepository{
 		minioClient: minioClient,
 		cfg:         cfg,
